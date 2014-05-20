@@ -15,13 +15,12 @@ class Mandelbrot
 		int screenWidth, screenHeight;
 		float scaleReal;
 		float scaleImg;
-		float zoom_factor;
-		int iteration;
-		vector<Color> points;
+		int max_iteration;
+		vector<Color> point_set;
 
 	public:
 		Mandelbrot(void);
-		Mandelbrot(int _screenWidth, int _screenHeigh);
+		Mandelbrot(int the_screenWidth, int the_screenHeigh);
 		~Mandelbrot(void);
 		void draw();
 		void zoomIn();
