@@ -8,7 +8,6 @@
 #ifndef VECTOR3F_H_
 #define VECTOR3F_H_
 #include <math.h>
-#include <iostream>
 using namespace std;
 
 struct Vector3f
@@ -57,9 +56,6 @@ struct Vector3f
 		return( Vector3f( lhs.y * rhs.z - lhs.z * rhs.y,
 						  lhs.z * rhs.x - lhs.x * rhs.z,
 					      lhs.x * rhs.y - lhs.y * rhs.x ) );
-	}
-	void printOut(){
-		cout<<"("<<x<<","<<y<<","<<z<<")"<<endl;
 	}
 };
 

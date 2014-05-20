@@ -23,9 +23,11 @@ int WINDOW_HEIGHT = 600;
 int X_RANGE = 400;
 int Y_RANGE = 400;
 int Z_RANGE = 200;
+int iteration = 10;
+float colorValue = 0.8;
+int nOrder = 8;
 
-
-Mandelbulb mandelbulb (X_RANGE, Y_RANGE, Z_RANGE, 20);
+Mandelbulb mandelbulb (X_RANGE, Y_RANGE, Z_RANGE, iteration, colorValue, nOrder);
 Camera camera;
 
 void setWindow(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top){
@@ -51,19 +53,19 @@ void myDisplay( void )  {
 	glColor3f(0.0f,1.0f,0.0f);
 	glBegin(GL_LINES);
 		glVertex3f(0.0f,0.0f,0.0f);
-		glVertex3f(0.0f,0.0f,1.0f);
+		glVertex3f(0.0f,0.0f,5.0f);
 	glEnd();
 
 	glColor3f(1.0f,0.0f,0.0f);
 	glBegin(GL_LINES);
 		glVertex3f(0.0f,0.0f,0.0f);
-		glVertex3f(0.0f,1.0f,0.0f);
+		glVertex3f(0.0f,5.0f,0.0f);
 	glEnd();
 
 	glColor3f(0.0f,0.0f,1.0f);
 	glBegin(GL_LINES);
 		glVertex3f(0.0f,0.0f,0.0f);
-		glVertex3f(1.0f,0.0f,0.0f);
+		glVertex3f(5.0f,0.0f,0.0f);
 	glEnd();
 	glutSwapBuffers();
 }
@@ -131,7 +133,7 @@ int main( int argc, char *argv[] )  {
   // Set the window position in screen pixels.
   glutInitWindowPosition( 100, 150 );
   // Create the window.
-  glutCreateWindow("Mandelbrot 3D");
+  glutCreateWindow("Mandelbulb");
   // Set the callback funcion to call when we need to draw something.
   glutDisplayFunc( myDisplay );
   glutKeyboardFunc(myKeyInput);

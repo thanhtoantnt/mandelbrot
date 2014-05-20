@@ -16,7 +16,6 @@
 #include "Color.h"
 #include "Vector3f.h"
 #include "Complex.h"
-#include <iostream>
 using namespace std;
 
 class Mandelbulb{
@@ -25,6 +24,7 @@ public:
 	float minY, maxY;
 	float minZ, maxZ;
 	float xFactor, yFactor, zFactor;
+	float colorValue;
 	int xRange, yRange, zRange;
 	int iteration;
 	vector<Vector3f> points;
@@ -35,13 +35,14 @@ public:
 	int nOrder;
 	int step;
 	double thresholdDistance, bailout;
-	//int count = 0;
 public:
-	Mandelbulb(int xRange, int yRange, int zRange, int iteration){
+	Mandelbulb(int xRange, int yRange, int zRange, int iteration, float colorValue, int nOrder){
 		this->xRange = xRange;
 		this->yRange = yRange;
 		this->zRange = zRange;
 		this->iteration = iteration;
+		this->colorValue = colorValue;
+		this->nOrder = nOrder;
 		minX = -1.5f; maxX = 1.5f;
 		minY = -1.5f; maxY = 1.5f;
 		minZ = -1.5f; maxZ = 1.5f;
@@ -53,7 +54,6 @@ public:
 	void initPoints(){
 		step = 100;
 		thresholdDistance = 0.000001;
-		nOrder = 8;
 		bailout = 2.0;
 
 		currentPoint.y = minY;
@@ -62,9 +62,7 @@ public:
 			for (int i = 0; i < xRange; i++){
 				currentPoint.z = minZ;
 				for (int k = step; k > 0 && currentPoint.z < maxZ; k--){
-					nextPoint = currentPoint;
-					dw = 1.0;
-					w = 0.0;
+					init();
 					for (int iter = 0; iter < iteration; iter ++){
 						if (w > bailout){
 							break;
@@ -83,9 +81,7 @@ public:
 
 				currentPoint.z = maxZ;
 				for (int k = step; k > 0 && currentPoint.z > minZ; k--){
-					nextPoint = currentPoint;
-					dw = 1.0;
-					w = 0.0;
+					init();
 					for (int iter = 0; iter < iteration; iter ++){
 						if (w > bailout){
 							break;
@@ -112,9 +108,7 @@ public:
 			for (int i = 0; i < xRange; i++){
 				currentPoint.y = minY;
 				for (int k = step; k > 0 && currentPoint.y < maxY; k--){
-					nextPoint = currentPoint;
-					dw = 1.0;
-					w = 0.0;
+					init();
 					for (int iter = 0; iter < iteration; iter ++){
 						if (w > bailout){
 							break;
@@ -133,9 +127,7 @@ public:
 
 				currentPoint.y = maxY;
 				for (int k = step; k > 0 && currentPoint.y > minY; k--){
-					nextPoint = currentPoint;
-					dw = 1.0;
-					w = 0.0;
+					init();
 					for (int iter = 0; iter < iteration; iter ++){
 						if (w > bailout){
 							break;
@@ -162,9 +154,7 @@ public:
 			for (int i = 0; i < xRange; i++){
 				currentPoint.x = minX;
 				for (int k = step; k > 0 && currentPoint.x < maxX; k--){
-					nextPoint = currentPoint;
-					dw = 1.0;
-					w = 0.0;
+					init();
 					for (int iter = 0; iter < iteration; iter ++){
 						if (w > bailout){
 							break;
@@ -183,9 +173,7 @@ public:
 
 				currentPoint.x = maxX;
 				for (int k = step; k > 0 && currentPoint.x > minX; k--){
-					nextPoint = currentPoint;
-					dw = 1.0;
-					w = 0.0;
+					init();
 					for (int iter = 0; iter < iteration; iter ++){
 						if (w > bailout){
 							break;
@@ -207,22 +195,29 @@ public:
 		}
 	}
 
+	void init(){
+		nextPoint = currentPoint;
+		dw = 1.0;
+		w = 0.0;
+	}
+
 	void update(){
 		dw = dw*nOrder*pow(w,nOrder-1)+1;
 		w = nextPoint.Length();
-		int w8 = pow(w, nOrder);
 		phi = atan(nextPoint.y/nextPoint.x)*nOrder;
 		theta = acos(nextPoint.z/w)*nOrder;
 
-		nextPoint.x = currentPoint.x + sin(theta)*cos(phi)*w8;
-		nextPoint.y = currentPoint.y + sin(theta)*sin(phi)*w8;
-		nextPoint.z = currentPoint.z + cos(theta)*w8;
+		nextPoint.x = currentPoint.x + sin(theta)*cos(phi)*pow(w, nOrder);
+		nextPoint.y = currentPoint.y + sin(theta)*sin(phi)*pow(w, nOrder);
+		nextPoint.z = currentPoint.z + cos(theta)*pow(w, nOrder);
 	}
 
 	void addPoint(int k){
 		points.push_back(currentPoint);
-		float RGBValue = float(k)/step;
-		Color color(RGBValue, RGBValue, RGBValue);
+		float red = colorValue * abs(currentPoint.x);
+		float green = colorValue * abs(currentPoint.y);
+		float blue = colorValue * abs(currentPoint.z);
+		Color color(red, green, blue);
 		ColorPoints.push_back(color);
 	}
 
