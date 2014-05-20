@@ -11,9 +11,9 @@
 #include "Mandelbrot.h"
 using namespace std;
 
-int WINDOW_WIDTH = 800;
-int WINDOW_HEIGHT = 600;
-
+//global variables
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 640;
 Mandelbrot mandelbrot (WINDOW_WIDTH, WINDOW_HEIGHT);
 
 void myInit( void ) {
@@ -33,27 +33,27 @@ void myDisplay( void )  {
 
 void myKeyInput(unsigned char key, int x, int y){
 	switch(key){
-		case 'a':
+		case 'a':               // using key 'a' to zoom in
 			mandelbrot.zoomIn();
 			break;
 		case 'f':
-			mandelbrot.zoomOut();
+			mandelbrot.zoomOut();  // using key 'f' to zoom out
 			break;
 	}
 	glutPostRedisplay();
 }
 void specialFunction(int key, int x, int y){
 	switch(key){
-		case GLUT_KEY_LEFT:
+		case GLUT_KEY_LEFT:   // using arrow key LEFT to go to the left
 			mandelbrot.goLeft();
 			break;
-		case GLUT_KEY_RIGHT:
+		case GLUT_KEY_RIGHT:   // using arrow key RIGHT to go to the right
 			mandelbrot.goRight();
 			break;
-		case GLUT_KEY_UP:
+		case GLUT_KEY_UP:				// go up by UP arrow key
 			mandelbrot.goUp();
 			break;
-		case GLUT_KEY_DOWN:
+		case GLUT_KEY_DOWN:			// go down by DOWN arrow key
 			mandelbrot.goDown();
 			break;
 	}

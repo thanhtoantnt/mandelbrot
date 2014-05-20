@@ -1,4 +1,3 @@
-
 #include <windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -6,11 +5,12 @@
 
 #include "Mandelbrot.h"
 
-const float realFactor = 0.045;
-const float imgFactor = 0.03;
+// default construction
 Mandelbrot::Mandelbrot(void){
 }
 
+// construction width creen width and height
+// calculating initial values
 Mandelbrot::Mandelbrot(int the_screenWidth, int the_screenHeight){
 	minReal = -2.0; maxReal = 1.0;
 	
@@ -19,16 +19,21 @@ Mandelbrot::Mandelbrot(int the_screenWidth, int the_screenHeight){
 
 	minImg = -1.0; maxImg = 1.0;
 	scaleImg = (maxImg - minImg)/ screenHeight;
+	
+	imgFactor = (maxReal - minReal)/40;
+	realFactor = imgFactor*1.5;
  
 	max_iteration = 32;
 	createPointSet();	
 }
 
+//destruction
 Mandelbrot::~Mandelbrot(void){
 }
 
+//create set of color of poins
 void Mandelbrot::createPointSet(){
-	int row, col, n;
+	int row, col, iteration;
 	Complex c;
 	Color color;
 	
@@ -37,19 +42,21 @@ void Mandelbrot::createPointSet(){
 		c.real = minReal;
 		for(col = 0; col < screenWidth; col++){
 			Complex z(0,0);
-			for(n = 0; n < max_iteration; n++){
-				if(z.modulus() > 4){
+			for(iteration = 0; iteration < max_iteration; iteration++){
+				if(z.modulus() > 4){  // if absolute value of  complex number z is over 4, then it is not in Mandelbrot set
 					break;
 				}
 				z = z * z + c;
 			}
-		
-			if(n < max_iteration) { 
-				color =  Color::coloring(n, max_iteration);
+			
+			// if the pixel is not in the Mandelbrot set, the coloring it
+			if(iteration < max_iteration) { 
+				color =  Color::coloring(iteration, max_iteration);
 			}
 			
+			// if not, it is in the set, the its color is black
 			else { color.red = color.green = color.blue = 0.0f; }
-			point_set.push_back(color);
+			point_set.push_back(color);  // push into the vector
 			
 			c.real += scaleReal;
 		}
@@ -57,6 +64,7 @@ void Mandelbrot::createPointSet(){
 	}
 }
 
+// drawing depens on the point set, the set of colors of points
 void Mandelbrot::draw(){
 	glBegin(GL_POINTS);
 	vector<Color>::iterator it = point_set.begin();
@@ -70,7 +78,7 @@ void Mandelbrot::draw(){
 	glEnd();
 }
 
-
+//zoom in 
 void Mandelbrot::zoomIn(){
 	if(minReal < maxReal - 2*realFactor) {
 		 minReal = minReal + realFactor; 
@@ -85,10 +93,15 @@ void Mandelbrot::zoomIn(){
 	}
 	scaleImg = (maxImg - minImg)/screenHeight;
 	
+	//change the zoom factor affter zooming
+	imgFactor = (maxReal - minReal)/40;
+	realFactor = imgFactor*1.5;
+	
 	point_set.clear();
 	createPointSet();
 }
 
+//zoom out
 void Mandelbrot::zoomOut(){
 	
 	minReal = minReal - realFactor;
@@ -100,10 +113,15 @@ void Mandelbrot::zoomOut(){
 	maxImg = maxImg + imgFactor;
 	scaleImg = (maxImg - minImg)/screenHeight;
 	
+	//change the zoom factor after zooming
+	imgFactor = (maxReal - minReal)/40;
+	realFactor = imgFactor*1.5;
+	
 	point_set.clear();
 	createPointSet();
 }
 
+// go to the left of the screen
 void Mandelbrot::goLeft(){
 	maxReal = maxReal - realFactor;
 	minReal = minReal - realFactor;
@@ -112,6 +130,7 @@ void Mandelbrot::goLeft(){
 	createPointSet();
 }
 
+// go to the right of the screen
 void Mandelbrot::goRight(){
 	maxReal = maxReal + realFactor;
 	minReal = minReal + realFactor;
@@ -120,6 +139,7 @@ void Mandelbrot::goRight(){
 	createPointSet();
 }
 
+// go down
 void Mandelbrot::goDown(){
 	maxImg = maxImg - imgFactor;
 	minImg = minImg - imgFactor;
@@ -128,6 +148,7 @@ void Mandelbrot::goDown(){
 	createPointSet();
 }
 
+// go up
 void Mandelbrot::goUp(){
 	maxImg = maxImg + imgFactor;
 	minImg = minImg + imgFactor;
@@ -135,7 +156,3 @@ void Mandelbrot::goUp(){
 	point_set.clear();
 	createPointSet();
 }
-
-
-
-
