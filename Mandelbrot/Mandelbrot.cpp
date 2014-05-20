@@ -23,7 +23,9 @@ Mandelbrot::Mandelbrot(int the_screenWidth, int the_screenHeight){
 	imgFactor = (maxReal - minReal)/40;
 	realFactor = imgFactor*1.5;
  
-	max_iteration = 32;
+	max_iteration = 35;
+	
+	cout << max_iteration << endl;
 	createPointSet();	
 }
 
